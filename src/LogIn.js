@@ -31,9 +31,9 @@ const LogIn = () => {
       }
       if (data.user) {
         setIsPending(true);
-        navigate("/calendar");
+        localStorage.setItem("email", data.email);
+        navigate("calendar");
       }
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -42,10 +42,13 @@ const LogIn = () => {
   return (
     <Row className="login">
       <Col></Col>
-      <Col>
-        <Form className="my-5 py-5" onSubmit={handleSubmit}>
-          <Form.Group className="my-4" controlId="Email">
-            <Form.Label>Email address</Form.Label>
+      <Col></Col>
+
+      <Col className="my-5 py-5">
+        <div className="fs-3"></div>
+        <Form className="my-5 p-5 form-design" onSubmit={handleSubmit}>
+          <Form.Group className="my-3" controlId="Email">
+            <Form.Label className="fs-5">Email </Form.Label>
             <Form.Control
               type="email"
               placeholder="Enter email"
@@ -54,8 +57,8 @@ const LogIn = () => {
             <div className="py-2">{emailError}</div>
           </Form.Group>
 
-          <Form.Group className="my-4" controlId="Password">
-            <Form.Label>Password</Form.Label>
+          <Form.Group className="my-3" controlId="Password">
+            <Form.Label className="fs-5">Password</Form.Label>
             <Form.Control
               type="password"
               placeholder="Password"
@@ -64,17 +67,19 @@ const LogIn = () => {
             <div className="py-2">{passwordError}</div>
           </Form.Group>
           {!isPending && (
-            <Button variant="dark" type="submit">
+            <Button variant="light" type="submit" className="px-3 py-1">
               Log-In
             </Button>
           )}
           {isPending && (
-            <Button variant="dark" type="submit" disabled>
+            <Button variant="light" type="submit" disabled>
               Logging-In
             </Button>
           )}
         </Form>
       </Col>
+      <Col></Col>
+
       <Col></Col>
     </Row>
   );

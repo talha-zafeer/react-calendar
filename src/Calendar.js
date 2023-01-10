@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ChevronCompactLeft } from "react-bootstrap-icons";
 import AllDayEvent from "./AllDayEvent";
 import { alignTasks } from "./helper/alignTasks";
 import Hour from "./Hour";
@@ -11,22 +12,18 @@ const Calendar = () => {
   const [dayEvents, setDayEvents] = useState([]);
   const [flag, setFlag] = useState(false);
 
-  async function getEvents() {
-    const endPoint = "/events";
+  const isUpdated = () => setFlag(false);
 
+  async function getEvents() {
     try {
-      const result = await fetch(endPoint, {
+      const result = await fetch("/events", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
       let { data } = await result.json();
-
       setEvents(data.events);
       setDayEvents(data.dayEvents);
-      console.log(dayEvents);
-      events.sort((a, b) =>
-        a.endAt - a.startAt < b.endAt - b.startAt ? 1 : -1
-      );
+
       setFlag(true);
     } catch (err) {
       console.log("Error ", err);
@@ -45,10 +42,9 @@ const Calendar = () => {
   }
 
   useEffect(() => {
-    console.log("Herereeasdsadadsdad");
     getEvents();
     alignTasks(renderedEvents);
-  });
+  }, [flag]);
 
   return (
     <div className="calendar">
@@ -58,7 +54,10 @@ const Calendar = () => {
         </p>
       </header>
       <div className="all-day-task">
-        {dayEvents && dayEvents.map((event) => <AllDayEvent event={event} />)}
+        {dayEvents &&
+          dayEvents.map((event) => (
+            <AllDayEvent event={event} isUpdated={isUpdated} key={event._id} />
+          ))}
       </div>
       <div className="am">
         <h1>AM</h1>
@@ -70,6 +69,7 @@ const Calendar = () => {
                 key={index}
                 events={events}
                 setRenderedEvents={setRenderedEvents}
+                isUpdated={isUpdated}
               />
             ))}
         </div>
@@ -84,6 +84,7 @@ const Calendar = () => {
                 key={index}
                 events={events}
                 setRenderedEvents={setRenderedEvents}
+                isUpdated={isUpdated}
               />
             ))}
         </div>

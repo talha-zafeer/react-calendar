@@ -1,17 +1,46 @@
 import Event from "./Event";
 
-const Hour = ({ currentHour, events, setRenderedEvents }) => {
+const Hour = ({ currentHour, events, setRenderedEvents, isUpdated }) => {
   const eventListTop = [];
   const eventListBot = [];
   events &&
+    events.sort((a, b) => (a.endAt - a.startAt < b.endAt - b.startAt ? 1 : -1));
+  events &&
     events.forEach((event) => {
-      if (event.startAt == currentHour) {
+      let startTime = new Date(event.startAt);
+      let endTime = new Date(event.endAt);
+      if (startTime.getMinutes() == "30") {
+        startTime = startTime.getHours() + ".5";
+      } else {
+        startTime = startTime.getHours().toString();
+      }
+      if (endTime.getMinutes() == "30") {
+        endTime = endTime.getHours() + ".5";
+      } else {
+        endTime = endTime.getHours().toString();
+      }
+
+      if (startTime == currentHour) {
         eventListTop.push(
-          <Event event={event} setRenderedEvents={setRenderedEvents} />
+          <Event
+            event={event}
+            key={event._id}
+            setRenderedEvents={setRenderedEvents}
+            isUpdated={isUpdated}
+            startTime={startTime}
+            endTime={endTime}
+          />
         );
-      } else if (Math.floor(event.startAt) == currentHour) {
+      } else if (Math.floor(startTime) == currentHour) {
         eventListBot.push(
-          <Event event={event} setRenderedEvents={setRenderedEvents} />
+          <Event
+            event={event}
+            setRenderedEvents={setRenderedEvents}
+            isUpdated={isUpdated}
+            startTime={startTime}
+            endTime={endTime}
+            key={event._id}
+          />
         );
       }
     });

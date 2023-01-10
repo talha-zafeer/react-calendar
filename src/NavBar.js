@@ -1,34 +1,64 @@
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { Calendar2Check } from "react-bootstrap-icons";
 
 const NavBar = () => {
+  const navigate = useNavigate();
+  const logOut = () => {
+    const result = fetch("/logout", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((result) => {
+        if (result.ok) {
+          localStorage.removeItem("email");
+          navigate("/");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+  const email = localStorage.getItem("email");
+
   return (
-    <Navbar bg="dark" variant="dark">
+    <Navbar variant="dark" className="nav-bar">
       <Container>
-        <Navbar.Brand to="#home">Navbar</Navbar.Brand>
-        <Nav className="me-auto">
-          <Link to="calendar" className="nav-link">
-            View Calendar
-          </Link>
-          <Link to="create-event" className="nav-link">
-            Create Event
-          </Link>
-          <Link to="create-all-day" className="nav-link">
-            Create All-Day Event
-          </Link>
-        </Nav>
-        <Navbar.Collapse className="justify-content-end">
-          <Navbar.Text>
-            Signed in as: <a href="#login">{}</a>
-          </Navbar.Text>
-          <a
-            href="http://localhost:8000/logout"
-            className="btn btn-secondary ms-5"
-          >
-            Logout
-          </a>
-        </Navbar.Collapse>
+        <Navbar.Brand to="#calendar">
+          <Calendar2Check className="fs-1" />
+        </Navbar.Brand>
+        {email && (
+          <>
+            <Nav className="me-auto">
+              <Link to="calendar" className="nav-link">
+                View Calendar
+              </Link>
+              <Link to="create-event" className="nav-link">
+                Create Event
+              </Link>
+              <Link to="create-all-day" className="nav-link">
+                Create All-Day Event
+              </Link>
+            </Nav>
+            <Navbar.Collapse className="justify-content-end">
+              <Navbar.Text>Signed in as: {email}</Navbar.Text>
+              <a onClick={logOut} className="btn btn-light ms-5">
+                Logout
+              </a>
+            </Navbar.Collapse>
+          </>
+        )}
+        {!email && (
+          <>
+            <Nav className="me-auto justify-content-end"></Nav>
+            <Navbar.Collapse className="justify-content-end">
+              <Link to="sign-up" className="btn btn-light ms-5">
+                Register
+              </Link>
+              <Link to="/" className=" btn btn-light ms-5">
+                LogIn
+              </Link>
+            </Navbar.Collapse>
+          </>
+        )}
       </Container>
     </Navbar>
   );

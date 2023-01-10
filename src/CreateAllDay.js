@@ -4,6 +4,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { useNavigate } from "react-router-dom";
+import { Spinner } from "react-bootstrap";
 
 const CreateAllDay = () => {
   const [title, setTitle] = useState("");
@@ -33,7 +34,7 @@ const CreateAllDay = () => {
     <Row className="create-event my-5 py-5">
       <Col></Col>
       <Col>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} className="form-design p-5">
           <Form.Group className="mb-3" controlId="formGridAddress1">
             <Form.Label>Event Title</Form.Label>
             <Form.Control
@@ -55,11 +56,7 @@ const CreateAllDay = () => {
               Create
             </Button>
           )}
-          {isPending && (
-            <Button variant="dark" type="submit" className="my-3">
-              Creating Event ...
-            </Button>
-          )}
+          {isPending && <Spinner animation="border" />}
         </Form>
       </Col>
       <Col></Col>
