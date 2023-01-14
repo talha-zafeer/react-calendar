@@ -67,7 +67,7 @@ const LogIn = () => {
             <div className="py-2">{passwordError}</div>
           </Form.Group>
           {!isPending && (
-            <Button variant="light" type="submit" className="px-3 py-1">
+            <Button variant="light" type="submit" className="px-3 py-1 button">
               Log-In
             </Button>
           )}

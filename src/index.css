@@ -45,6 +45,10 @@ header {
   font-size: 16px;
 }
 
+.button {
+  background-color: rgb(99, 81, 206, 0.7);
+}
+
 .all-day-task {
   padding: 5px 0px;
   background-color: rgb(230, 230, 230, 0.3);

@@ -143,12 +143,12 @@ const UpdateEvent = ({ show, close, event, isUpdated }) => {
             Close
           </Button>
           {!isPending && (
-            <Button variant="primary" onClick={handleSubmit}>
+            <Button variant="success" onClick={handleSubmit}>
               Save Changes
             </Button>
           )}
           {isPending && (
-            <Button variant="primary" onClick={handleSubmit}>
+            <Button variant="success" onClick={handleSubmit}>
               Saving Changes ...
             </Button>
           )}

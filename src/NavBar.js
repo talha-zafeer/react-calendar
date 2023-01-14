@@ -20,7 +20,7 @@ const NavBar = () => {
   const email = localStorage.getItem("email");
 
   return (
-    <Navbar variant="dark" className="nav-bar">
+    <Navbar variant="dark" className="nav-bar sticky-top">
       <Container>
         <Navbar.Brand to="#calendar">
           <Calendar2Check className="fs-1" />
