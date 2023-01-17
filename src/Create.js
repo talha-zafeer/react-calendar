@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -10,12 +10,36 @@ import { Spinner } from "react-bootstrap";
 const Create = () => {
   const time = [];
   const [title, setTitle] = useState("");
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState("Karachi");
   const [startTime, setStartTime] = useState("0");
   const [endTime, setEndTime] = useState("0");
   const [isPending, setIsPending] = useState(false);
+  const [cities, setCities] = useState([]);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch(`http://api.geonames.org/searchJSON?q=*&country=pk&username=t032`)
+      .then((res) => res.json())
+      .then((data) => setCities(data.geonames));
+
+    const startTimeDropDown = document.querySelector(".start-time");
+    const endTimeDropDown = document.querySelector(".end-time");
+    endTimeDropDown.childNodes.forEach((time) => {
+      if (parseFloat(startTime) >= parseFloat(time.value)) {
+        time.disabled = true;
+      } else {
+        time.disabled = false;
+      }
+    });
+    startTimeDropDown.childNodes.forEach((time) => {
+      if (parseFloat(endTime) <= parseFloat(time.value)) {
+        time.disabled = true;
+      } else {
+        time.disabled = false;
+      }
+    });
+  }, [startTime, endTime]);
 
   for (let i = 0; i < 24; i++) {
     time.push(i);
@@ -72,21 +96,29 @@ const Create = () => {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formGridAddress2">
+          <Form.Group className="mb-3" controlId="formGridState">
             <Form.Label>Event Location</Form.Label>
-            <Form.Control
-              placeholder="Lahore , ISB or Karachi"
-              onChange={(e) => setLocation(e.target.value)}
-              required
-            />
+            <Form.Select onChange={(e) => setLocation(e.target.value)} required>
+              {cities.map((city) => (
+                <option
+                  className="option-style"
+                  key={city.geonameId}
+                  value={city.name}
+                >
+                  {city.name}
+                </option>
+              ))}
+            </Form.Select>
           </Form.Group>
 
           <Row className="mb-3">
             <Form.Group as={Col} controlId="formGridState">
               <Form.Label>Start Time</Form.Label>
               <Form.Select
-                // defaultValue="0"
-                onChange={(e) => setStartTime(e.target.value)}
+                className="start-time"
+                onChange={(e) => {
+                  setStartTime(e.target.value);
+                }}
               >
                 {time.map((t) => (
                   <TimeList time={t} key={t} />
@@ -97,7 +129,7 @@ const Create = () => {
             <Form.Group as={Col} controlId="formGridState">
               <Form.Label>End Time</Form.Label>
               <Form.Select
-                // defaultValue="0"
+                className="end-time"
                 onChange={(e) => setEndTime(e.target.value)}
               >
                 {time.map((t) => (

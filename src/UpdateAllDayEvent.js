@@ -2,14 +2,22 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const UpdateAllDayEvent = ({ show, close, event, isUpdated }) => {
   const [title, setTitle] = useState(event.title);
   const [location, setLocation] = useState(event.location);
   const [isPending, setIsPending] = useState(false);
+  const [cities, setCities] = useState([]);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch(`http://api.geonames.org/searchJSON?q=*&country=pk&username=t032`)
+      .then((res) => res.json())
+      .then((data) => setCities(data.geonames));
+    console.log(event.location);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,13 +78,19 @@ const UpdateAllDayEvent = ({ show, close, event, isUpdated }) => {
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formGridAddress2">
+            <Form.Group className="mb-3" controlId="formGridState">
               <Form.Label>Event Location</Form.Label>
-              <Form.Control
-                placeholder="Lahore , ISB or Karachi"
-                defaultValue={event.location}
+              <Form.Select
                 onChange={(e) => setLocation(e.target.value)}
-              />
+                required
+              >
+                <option value={event.location}>{event.location}</option>
+                {cities.map((city) => (
+                  <option key={city.geonameId} value={city.name}>
+                    {city.name}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
           </Form>
         </Modal.Body>

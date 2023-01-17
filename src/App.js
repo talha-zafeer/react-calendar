@@ -8,6 +8,7 @@ import CreateAllDay from "./CreateAllDay";
 import SignUp from "./SignUp";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Footer from "./Footer";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 function App() {
   return (
@@ -16,12 +17,12 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<LogIn />} />
-          <Route path="calendar" element={<Calendar />} />
-          <Route path="create-event" element={<Create />} />
-          <Route path="create-all-day" element={<CreateAllDay />} />
+          <Route element={<ProtectedRoutes />}>
+            <Route path="calendar" element={<Calendar />} />
+            <Route path="create-event" element={<Create />} />
+            <Route path="create-all-day" element={<CreateAllDay />} />
+          </Route>
           <Route path="sign-up" element={<SignUp />} />
-
-          {/* <Route path="*" element={<Error404 />} /> */}
 
           {/* <Route path="*" element={<Error404 />} /> */}
         </Routes>

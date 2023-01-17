@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { useNavigate } from "react-router-dom";
 import TimeList from "./TimeList";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const UpdateEvent = ({ show, close, event, isUpdated }) => {
   const time = [];
@@ -14,8 +14,32 @@ const UpdateEvent = ({ show, close, event, isUpdated }) => {
   const [startTime, setStartTime] = useState(event.startAt);
   const [endTime, setEndTime] = useState(event.endAt);
   const [isPending, setIsPending] = useState(false);
+  const [cities, setCities] = useState([]);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch(`http://api.geonames.org/searchJSON?q=*&country=pk&username=t032`)
+      .then((res) => res.json())
+      .then((data) => setCities(data.geonames));
+
+    const startTimeDropDown = document.querySelector(".start-time");
+    const endTimeDropDown = document.querySelector(".end-time");
+    endTimeDropDown.childNodes.forEach((time) => {
+      if (parseFloat(startTime) >= parseFloat(time.value)) {
+        time.disabled = true;
+      } else {
+        time.disabled = false;
+      }
+    });
+    startTimeDropDown.childNodes.forEach((time) => {
+      if (parseFloat(endTime) <= parseFloat(time.value)) {
+        time.disabled = true;
+      } else {
+        time.disabled = false;
+      }
+    });
+  }, [startTime, endTime]);
 
   for (let i = 0; i < 24; i++) {
     time.push(i);
@@ -55,7 +79,8 @@ const UpdateEvent = ({ show, close, event, isUpdated }) => {
       });
       isUpdated();
       close();
-      navigate("/calendar");
+      // navigate("/calendar");
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -73,7 +98,9 @@ const UpdateEvent = ({ show, close, event, isUpdated }) => {
       .then(() => {
         isUpdated();
         close();
-        navigate("/calendar");
+        window.location.reload();
+
+        // navigate("/calendar");
       })
       .catch((error) => {
         console.log(error);
@@ -101,20 +128,26 @@ const UpdateEvent = ({ show, close, event, isUpdated }) => {
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formGridAddress2">
+            <Form.Group className="mb-3" controlId="formGridState">
               <Form.Label>Event Location</Form.Label>
-              <Form.Control
-                placeholder="Lahore , ISB or Karachi"
-                defaultValue={event.location}
+              <Form.Select
                 onChange={(e) => setLocation(e.target.value)}
-              />
+                required
+              >
+                <option value={event.location}>{event.location}</option>
+                {cities.map((city) => (
+                  <option key={city.geonameId} value={city.name}>
+                    {city.name}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
-
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridState">
                 <Form.Label>Start Time</Form.Label>
                 <Form.Select
                   defaultValue={event.startAt}
+                  className="start-time"
                   onChange={(e) => setStartTime(e.target.value)}
                 >
                   {time.map((t) => (
@@ -128,6 +161,7 @@ const UpdateEvent = ({ show, close, event, isUpdated }) => {
                 <Form.Select
                   defaultValue={event.endAt}
                   onChange={(e) => setEndTime(e.target.value)}
+                  className="end-time"
                 >
                   {time.map((t) => (
                     <TimeList time={t} key={t} />

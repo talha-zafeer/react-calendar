@@ -1,5 +1,4 @@
 import { convertTime } from "./convertTime";
-import $ from "jquery";
 
 const elementsOverlap = (el1, el2) => {
   const event1 = el1.getBoundingClientRect();

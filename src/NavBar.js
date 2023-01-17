@@ -12,6 +12,8 @@ const NavBar = () => {
       .then((result) => {
         if (result.ok) {
           localStorage.removeItem("email");
+          localStorage.removeItem("isAuthenticated");
+
           navigate("/");
         }
       })

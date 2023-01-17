@@ -32,6 +32,8 @@ const LogIn = () => {
       if (data.user) {
         setIsPending(true);
         localStorage.setItem("email", data.email);
+        localStorage.setItem("isAuthenticated", true);
+
         navigate("calendar");
       }
     } catch (error) {

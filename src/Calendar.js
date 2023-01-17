@@ -12,7 +12,13 @@ const Calendar = () => {
   const [dayEvents, setDayEvents] = useState([]);
   const [flag, setFlag] = useState(false);
 
-  const isUpdated = () => setFlag(false);
+  const isUpdated = () => {
+    if (flag === true) {
+      setFlag(false);
+    } else {
+      setFlag(true);
+    }
+  };
 
   async function getEvents() {
     try {

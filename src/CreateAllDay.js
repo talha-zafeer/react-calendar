@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -8,11 +8,16 @@ import { Spinner } from "react-bootstrap";
 
 const CreateAllDay = () => {
   const [title, setTitle] = useState("");
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState("Karachi");
   const [isPending, setIsPending] = useState(false);
+  const [cities, setCities] = useState([]);
 
   const navigate = useNavigate();
-
+  useEffect(() => {
+    fetch(`http://api.geonames.org/searchJSON?q=*&country=pk&username=t032`)
+      .then((res) => res.json())
+      .then((data) => setCities(data.geonames));
+  });
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsPending(true);
@@ -43,12 +48,15 @@ const CreateAllDay = () => {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formGridAddress2">
+          <Form.Group className="mb-3" as={Col} controlId="formGridState">
             <Form.Label>Event Location</Form.Label>
-            <Form.Control
-              placeholder="Lahore , ISB or Karachi"
-              onChange={(e) => setLocation(e.target.value)}
-            />
+            <Form.Select onChange={(e) => setLocation(e.target.value)} required>
+              {cities.map((city) => (
+                <option key={city.geonameId} value={city.name}>
+                  {city.name}
+                </option>
+              ))}
+            </Form.Select>
           </Form.Group>
 
           {!isPending && (
