@@ -5,7 +5,7 @@ import { getClassName } from "./helper/getClassName";
 
 const Event = ({ event, setRenderedEvents, isUpdated, startTime, endTime }) => {
   const ref = useRef(null);
-  const height = (endTime - startTime) * 100 - 3 + "px";
+  const height = (endTime - startTime) * 100 + "px";
   const time = timeString(startTime);
   const [show, setShow] = useState(false);
   const [className, setClassName] = useState("");
