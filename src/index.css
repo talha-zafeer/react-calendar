@@ -193,8 +193,29 @@ header {
 .event-half-top :hover {
   cursor: pointer;
 }
+@keyframes example {
+  from {
+    opacity: 0;
+  }
+  to {
+    /* transform: rotate(360deg); */
+    /* width: 100%; */
+    opacity: 100;
+  }
+}
+
+.event:hover {
+  /* transition: 1s ease-in; */
+  width: 200%;
+  height: 100px;
+  color: black;
+}
 
 .event {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  transition: 0.5s ease-in-out;
   border-left: 8px solid rgb(0, 191, 0);
   background-color: rgb(255, 255, 255, 0.8);
   padding: 10px;
@@ -204,6 +225,10 @@ header {
   height: 100px;
   box-shadow: 3px 0px 5px 0px lightgrey;
   width: 100%;
+  animation-name: example;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-fill-mode: backwards;
 }
 
 .event-half-top {
@@ -265,7 +290,6 @@ header {
 }
 .event h5 {
   font-size: 16px;
-  padding-top: 8px;
 }
 .event span {
   /* padding-top: 20px; */
